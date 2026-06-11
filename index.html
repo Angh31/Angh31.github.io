@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Angel CC — QA Automation & DevSecOps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0e1a;
+      --bg2: #0f1626;
+      --accent: #00d4ff;
+      --accent2: #7c3aed;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --card: #111827;
+      --border: #1e293b;
+      --green: #10b981;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(10, 14, 26, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 4rem;
+      padding: 8rem 6rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 600;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      max-width: 480px;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .badge {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--card);
+    }
+
+    .badge.active {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.75rem 1.75rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+    }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    .hero-image {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero-image img {
+      width: 100%;
+      max-width: 480px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      filter: brightness(0.9);
+    }
+
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0,212,255,0.15), transparent 60%);
+      pointer-events: none;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 5rem 6rem;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 3rem;
+    }
+
+    /* PROJECTS */
+    .projects { background: var(--bg2); }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.75rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .project-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .project-name {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .project-tag {
+      font-size: 0.65rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      background: rgba(0,212,255,0.1);
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+
+    .project-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: auto;
+    }
+
+    .stack-pill {
+      font-size: 0.65rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      background: var(--border);
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+
+    /* STACK */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .stack-category {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+
+    .stack-category h4 {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .stack-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .stack-item {
+      font-size: 0.8rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stack-item::before {
+      content: '▸';
+      color: var(--accent);
+      font-size: 0.6rem;
+    }
+
+    /* CONTACT */
+    .contact { background: var(--bg2); text-align: center; }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+      background: var(--card);
+    }
+
+    .contact-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 2rem 6rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; padding: 6rem 1.5rem 3rem; gap: 2rem; }
+      .hero-image { order: -1; }
+      section { padding: 3rem 1.5rem; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#" class="nav-logo">angel@cc:~$</a>
+    <ul class="nav-links">
+      <li><a href="#proyectos">Proyectos</a></li>
+      <li><a href="#stack">Stack</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">QA Automation · DevSecOps · Guatemala</p>
+      <h1>Angel CC<br /><span>Automatización &amp; Seguridad</span></h1>
+      <p class="hero-sub">Ingeniero en Sistemas enfocado en QA Automation y DevSecOps. Construyo pipelines CI/CD con security gates, frameworks de testing E2E y sistemas de gestión en tiempo real.</p>
+      <div class="hero-badges">
+        <span class="badge active">Cypress</span>
+        <span class="badge active">Jenkins</span>
+        <span class="badge active">Docker</span>
+        <span class="badge">TypeScript</span>
+        <span class="badge">Node.js</span>
+        <span class="badge">PostgreSQL</span>
+        <span class="badge">OWASP ZAP</span>
+        <span class="badge">CCNA</span>
+      </div>
+      <div class="hero-cta">
+        <a href="https://github.com/Angh31" target="_blank" class="btn btn-primary">Ver GitHub</a>
+        <a href="#contacto" class="btn btn-outline">Contacto</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="Vikash.png" alt="Angel CC — QA Automation Engineer" />
+    </div>
+  </section>
+
+  <!-- PROYECTOS -->
+  <section class="projects" id="proyectos">
+    <p class="section-label">Portafolio</p>
+    <h2 class="section-title">Proyectos Destacados</h2>
+    <div class="projects-grid">
+
+      <a href="https://github.com/Angh31/PrototipoTransmetro" target="_blank" class="project-card">
+        <div class="project-header">
+          <span class="project-name">PrototipoTransmetro</span>
+          <span class="project-tag">Full Stack</span>
+        </div>
+        <p class="project-desc">Sistema de control en tiempo real para la red Transmetro de Guatemala. 13 tablas, Socket.io, JWT, 5 roles, alertas automáticas y despliegue en Render.</p>
+        <div class="project-stack">
+          <span class="stack-pill">Node.js</span>
+          <span class="stack-pill">React</span>
+          <span class="stack-pill">PostgreSQL</span>
+          <span class="stack-pill">Socket.io</span>
+          <span class="stack-pill">Docker</span>
+        </div>
+      </a>
+
+      <a href="https://github.com/Angh31/jenkins-devsecops-pipeline" target="_blank" class="project-card">
+        <div class="project-header">
+          <span class="project-name">Jenkins DevSecOps Pipeline</span>
+          <span class="project-tag">DevSecOps</span>
+        </div>
+        <p class="project-desc">Pipeline CI/CD declarativo con SAST (Semgrep), pruebas automatizadas con Jest y despliegue con Docker. Vulnerabilidad intencional para demo de detección.</p>
+        <div class="project-stack">
+          <span class="stack-pill">Jenkins</span>
+          <span class="stack-pill">Docker</span>
+          <span class="stack-pill">Semgrep</span>
+          <span class="stack-pill">Node.js</span>
+        </div>
+      </a>
+
+      <a href="https://github.com/Angh31/cypress-e2e-suite" target="_blank" class="project-card">
+        <div class="project-header">
+          <span class="project-name">Cypress E2E Suite</span>
+          <span class="project-tag">QA Automation</span>
+        </div>
+        <p class="project-desc">Suite de pruebas E2E y API Testing. Flujo completo de compra en Saucedemo, formularios Selenium y 4 tests de endpoints REST con cy.request().</p>
+        <div class="project-stack">
+          <span class="stack-pill">Cypress</span>
+          <span class="stack-pill">JavaScript</span>
+          <span class="stack-pill">API Testing</span>
+        </div>
+      </a>
+
+      <a href="https://github.com/Angh31/tuleap-docker" target="_blank" class="project-card">
+        <div class="project-header">
+          <span class="project-name">Tuleap QA Workflow</span>
+          <span class="project-tag">Gestión</span>
+        </div>
+        <p class="project-desc">Tuleap Community Edition en Docker con tracker de issues, Cardwall Kanban y tests E2E automatizados contra la instancia local.</p>
+        <div class="project-stack">
+          <span class="stack-pill">Tuleap</span>
+          <span class="stack-pill">Docker</span>
+          <span class="stack-pill">Cypress</span>
+        </div>
+      </a>
+
+      <a href="https://github.com/Angh31/dijkstra-peten" target="_blank" class="project-card">
+        <div class="project-header">
+          <span class="project-name">Dijkstra Petén</span>
+          <span class="project-tag">Algoritmos</span>
+        </div>
+        <p class="project-desc">Visualizador interactivo del algoritmo de Dijkstra sobre mapa real de los 14 municipios de Petén. Animación paso a paso con Min-Heap implementado desde cero.</p>
+        <div class="project-stack">
+          <span class="stack-pill">React</span>
+          <span class="stack-pill">Leaflet</span>
+          <span class="stack-pill">Vite</span>
+        </div>
+      </a>
+
+      <a href="https://github.com/Angh31/sistema_educativo_backend" target="_blank" class="project-card">
+        <div class="project-header">
+          <span class="project-name">Sistema Educativo</span>
+          <span class="project-tag">Backend</span>
+        </div>
+        <p class="project-desc">API REST para gestión académica con asistencia QR/PIN, 4 roles de usuario y predicción de riesgo estudiantil.</p>
+        <div class="project-stack">
+          <span class="stack-pill">Node.js</span>
+          <span class="stack-pill">Prisma</span>
+          <span class="stack-pill">PostgreSQL</span>
+          <span class="stack-pill">JWT</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section id="stack">
+    <p class="section-label">Tecnologías</p>
+    <h2 class="section-title">Stack Técnico</h2>
+    <div class="stack-grid">
+      <div class="stack-category">
+        <h4>Testing & QA</h4>
+        <div class="stack-items">
+          <span class="stack-item">Cypress</span>
+          <span class="stack-item">Jest + Supertest</span>
+          <span class="stack-item">OWASP ZAP</span>
+          <span class="stack-item">Semgrep (SAST)</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <h4>DevSecOps</h4>
+        <div class="stack-items">
+          <span class="stack-item">Jenkins</span>
+          <span class="stack-item">Docker</span>
+          <span class="stack-item">GitHub Actions</span>
+          <span class="stack-item">SonarQube</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <h4>Backend</h4>
+        <div class="stack-items">
+          <span class="stack-item">Node.js + Express</span>
+          <span class="stack-item">PostgreSQL</span>
+          <span class="stack-item">Prisma ORM</span>
+          <span class="stack-item">Socket.io</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <h4>Frontend</h4>
+        <div class="stack-items">
+          <span class="stack-item">React + Vite</span>
+          <span class="stack-item">TypeScript</span>
+          <span class="stack-item">Leaflet</span>
+          <span class="stack-item">Recharts</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <h4>Networking</h4>
+        <div class="stack-items">
+          <span class="stack-item">Cisco (CCNA)</span>
+          <span class="stack-item">VLANs + HSRP</span>
+          <span class="stack-item">Linux</span>
+          <span class="stack-item">TCP/IP</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <h4>Gestión</h4>
+        <div class="stack-items">
+          <span class="stack-item">Tuleap</span>
+          <span class="stack-item">Git Flow</span>
+          <span class="stack-item">Scrum</span>
+          <span class="stack-item">Kanban</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="contact" id="contacto">
+    <p class="section-label">Contacto</p>
+    <h2 class="section-title">¿Hablamos?</h2>
+    <p style="color: var(--muted); max-width: 480px; margin: 0 auto;">Disponible para proyectos remotos, prácticas profesionales y oportunidades de trabajo. Basado en Guatemala — zona horaria CST.</p>
+    <div class="contact-links">
+      <a href="https://github.com/Angh31" target="_blank" class="contact-link">
+        ⌥ GitHub
+      </a>
+      <a href="https://linkedin.com/in/TU-USUARIO" target="_blank" class="contact-link">
+        ↗ LinkedIn
+      </a>
+      <a href="mailto:TU-EMAIL" class="contact-link">
+        @ Email
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <p>angel@cc:~$ <span style="color: var(--accent)">_</span></p>
+    <p>Guatemala · 2026 · Angh31</p>
+  </footer>
+
+</body>
+</html>
